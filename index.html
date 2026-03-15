@@ -13,53 +13,30 @@
         .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; }
         .nav button.active { background: #ff9800 !important; color: #000 !important; }
 
-        /* Container & Grid */
+        /* Container */
         .container { max-width: 550px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); border-top: 8px solid var(--p); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { font-size: 11px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
         input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         
-        .calc-box { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; }
+        /* UI Calculation Display */
+        .calc-display { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; text-align: center; }
         .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
 
-        /* --- UPDATED RECEIPT DESIGN --- */
-        #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
-        .receipt-box { 
-            max-width: 420px; 
-            margin: auto; 
-            border: 3px solid var(--p); 
-            border-radius: 25px; 
-            padding: 20px; 
-            position: relative; 
-            background: #fff;
-            box-sizing: border-box;
-        }
-        .r-header { text-align: center; margin-bottom: 15px; }
-        .r-logo { width: 75px; height: 75px; border: 2.5px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--p); font-weight: bold; font-size: 20px; background: #fff; }
-        .r-logo img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .school-name { margin: 0; color: var(--p); font-size: 22px; font-weight: 800; text-transform: uppercase; }
-        .fee-tag { background: var(--p); color: white; padding: 5px 25px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 5px; }
-        
-        .r-meta { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; border-top: 2px solid #444; padding-top: 8px; margin-top: 15px; color: #000; }
-        .r-info { font-size: 14px; margin: 15px 0; line-height: 1.8; color: #000; }
-        
-        .r-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .r-table th { border-top: 2px solid #444; border-bottom: 2px solid #444; padding: 8px 0; text-align: left; font-size: 14px; }
-        .r-table td { padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee; color: #333; }
-        
-        .r-total-row { font-weight: 800; color: var(--p); font-size: 15px; }
-        .r-bal-row { color: var(--s); font-weight: 800; font-size: 15px; }
-        .r-footer { margin-top: 80px; text-align: right; }
-        .sig-line { display: inline-block; width: 160px; border-top: 2px solid #333; padding-top: 5px; font-weight: 700; font-size: 13px; }
+        /* Hide fields from UI as per screenshot request */
+        .hidden-field { display: none !important; }
 
-        /* @print android media */
-        @media print {
-            .no-print { display: none !important; }
-            #receipt-modal { position: absolute; top: 0; padding: 0; width: 100%; }
-            .receipt-box { border: 3px solid var(--p) !important; -webkit-print-color-adjust: exact; }
-            body { background: white; }
-        }
+        /* Receipt Design */
+        #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
+        .receipt-box { max-width: 420px; margin: auto; border: 3px solid var(--p); border-radius: 25px; padding: 20px; background: #fff; box-sizing: border-box; }
+        .r-header { text-align: center; margin-bottom: 10px; }
+        .r-logo { width: 75px; height: 75px; border: 2.5px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; }
+        .r-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .school-name { margin: 0; color: var(--p); font-size: 22px; font-weight: 800; text-transform: uppercase; }
+        .r-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .r-table td { padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee; }
+        
+        @media print { .no-print { display: none !important; } #receipt-modal { position: absolute; top: 0; padding: 0; width: 100%; } .receipt-box { border: 3px solid var(--p) !important; -webkit-print-color-adjust: exact; } }
     </style>
 </head>
 <body>
@@ -71,7 +48,7 @@
 
 <div id="entry-div" class="container no-print">
     <div style="margin-bottom:15px;">
-        <label>Select Month to Sync Columns</label>
+        <label>Select Month</label>
         <select id="Month" onchange="loadDynamicUI()">
             <option>January</option><option>February</option><option>March</option>
             <option>April</option><option>May</option><option>June</option>
@@ -80,12 +57,18 @@
         </select>
     </div>
     <div id="dynamic-fields" class="grid"></div>
+    
+    <div style="margin-top:15px;">
+        <label>Amount to Pay Now (₹)</label>
+        <input type="number" id="manual_paid" placeholder="Enter amount..." oninput="doCalc()">
+    </div>
+
     <button class="btn-save" onclick="saveData()">SAVE & PRINT RECEIPT 🖨️</button>
 </div>
 
 <div id="search-div" class="container no-print" style="display:none">
     <input type="text" id="q_id" placeholder="Enter Student ID...">
-    <button onclick="findData()" style="width:100%; margin-top:10px; padding:12px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold;">SEARCH</button>
+    <button onclick="findData()" style="width:100%; margin-top:10px; padding:12px; background:var(--p); color:white; border:none; border-radius:8px;">SEARCH</button>
     <div id="res-list" style="margin-top:20px;"></div>
 </div>
 
@@ -94,36 +77,28 @@
         <div class="r-header">
             <div class="r-logo" id="logo-container">IPS</div>
             <h2 class="school-name">IQRA PUBLIC SCHOOL</h2>
-            <p style="font-size:11px; margin:4px; color:#444;">Mathurapur, Barsoi, Katihar</p>
-            <div class="fee-tag">FEE RECEIPT</div>
+            <p style="font-size:11px; margin:4px;">Mathurapur, Barsoi, Katihar</p>
         </div>
-
-        <div class="r-meta">
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:10px; border-top:1px solid #000; padding-top:5px;">
             <span>Date: <span id="r_date"></span></span>
             <span>ID: <span id="r_id"></span></span>
         </div>
-
-        <div class="r-info">
-            <b>Name:</b> <span id="r_name"></span> | <b>Class:</b> <span id="r_class"></span><br>
-            <b>Father:</b> <span id="r_father"></span> | <b>Month:</b> <span id="r_mon"></span>
+        <div style="font-size:14px; margin:10px 0;">
+            <b>Name:</b> <span id="r_name"></span><br>
+            <b>Class:</b> <span id="r_class"></span> | <b>Month:</b> <span id="r_mon"></span>
         </div>
-
         <table class="r-table">
-            <thead><tr><th>Description</th><th style="text-align:right">Amount</th></tr></thead>
+            <thead><tr><th>Description</th><th align="right">Amount</th></tr></thead>
             <tbody id="r_items"></tbody>
             <tfoot>
-                <tr class="r-total-row"><td style="padding-top:10px;">TOTAL PAID</td><td align="right" id="r_paid" style="padding-top:10px;"></td></tr>
-                <tr class="r-bal-row"><td>Balance</td><td align="right" id="r_rem"></td></tr>
+                <tr style="font-weight:bold; color:var(--p);"><td>TOTAL PAID</td><td align="right" id="r_paid"></td></tr>
+                <tr style="font-weight:bold; color:var(--s);"><td>Remaining</td><td align="right" id="r_rem"></td></tr>
             </tfoot>
         </table>
-
-        <div class="r-footer">
-            <div class="sig-line">Principal Signature</div>
-        </div>
-
-        <div class="no-print" style="margin-top:40px; display:flex; gap:15px; justify-content:center;">
-            <button onclick="window.print()" style="padding:12px 25px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">SAVE PDF / PRINT</button>
-            <button onclick="closeR()" style="padding:12px 25px; background:#666; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">BACK</button>
+        <div style="margin-top:50px; text-align:right;"><span style="border-top:1px solid #000; padding-top:5px; font-size:12px;">Principal Signature</span></div>
+        <div class="no-print" style="margin-top:20px; display:flex; gap:10px;">
+            <button onclick="window.print()" style="flex:1; padding:10px; background:var(--p); color:white; border-radius:5px;">PRINT</button>
+            <button onclick="closeR()" style="flex:1; padding:10px; background:#666; color:white; border-radius:5px;">BACK</button>
         </div>
     </div>
 </div>
@@ -134,9 +109,9 @@
 
     let currentHeaders = [];
 
-    window.onload = () => {
-        loadDynamicUI();
-        if(LOGO_URL) document.getElementById('logo-container').innerHTML = `<img src="${LOGO_URL}">`;
+    window.onload = () => { 
+        loadDynamicUI(); 
+        if(LOGO_URL) document.getElementById('logo-container').innerHTML = `<img src="${LOGO_URL}">`; 
     };
 
     function tab(t) {
@@ -149,90 +124,105 @@
     async function loadDynamicUI() {
         let m = document.getElementById('Month').value;
         let container = document.getElementById('dynamic-fields');
-        container.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading fields...</p>";
+        container.innerHTML = "Loading...";
 
         try {
             let res = await fetch(URL + "?action=getHeaders&month=" + m);
             currentHeaders = await res.json();
             container.innerHTML = ""; 
             
-            let skip = ["PaidDate", "TotalDues", "TotalPaid", "Remaining", "Month"];
+            // Sheet column names with spaces as requested for L to O columns
+            let hiddenFromUI = ["Total Dues", "Total Paid", "Paid Date", "Remaining", "Month"];
 
             currentHeaders.forEach(h => {
                 let cleanH = h.trim();
-                if(!skip.includes(cleanH)) {
-                    let div = document.createElement('div');
-                    if(["StudentName", "FatherName", "StudentId", "Student Name", "Father Name", "Student Id"].includes(cleanH)) div.style.gridColumn = "span 2";
-                    div.innerHTML = `<label>${h}</label><input type="text" id="${cleanH}" oninput="doCalc()">`;
-                    container.appendChild(div);
-                }
+                let div = document.createElement('div');
+                
+                // Hiding specific L-O columns from UI
+                if(hiddenFromUI.includes(cleanH)) div.className = "hidden-field";
+                
+                if(["Student Name", "Father Name", "Student Id"].includes(cleanH)) div.style.gridColumn = "span 2";
+                
+                div.innerHTML = `<label>${h}</label><input type="text" id="${cleanH}" oninput="doCalc()">`;
+                container.appendChild(div);
             });
-            
+
             container.innerHTML += `
-                <div class="calc-box">
-                    <div><label>Total</label><input type="number" id="TotalDues" readonly></div>
-                    <div><label>Paid</label><input type="number" id="TotalPaid" oninput="doCalc()"></div>
-                    <div><label>Balance</label><input type="number" id="Remaining" readonly></div>
+                <div class="calc-display">
+                    <div><label>Total Fee</label><div id="ui_total" style="font-weight:bold;">0</div></div>
+                    <div><label>Balance</label><div id="ui_bal" style="font-weight:bold; color:red;">0</div></div>
                 </div>`;
-        } catch (e) {
-            container.innerHTML = "<p style='color:red;'>Failed to load. Check Internet.</p>";
-        }
+        } catch (e) { container.innerHTML = "Failed to load."; }
     }
 
     function doCalc() {
         let total = 0;
-        let nonFee = ["StudentId", "StudentName", "FatherName", "Class", "Student Id", "Student Name", "Father Name"];
+        let skipKeys = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
+        
         currentHeaders.forEach(h => {
             let id = h.trim();
             let el = document.getElementById(id);
-            if(el && !nonFee.includes(id) && !["PaidDate","TotalDues","TotalPaid","Remaining","Month"].includes(id)) {
-                total += parseFloat(el.value) || 0;
-            }
+            if(el && !skipKeys.includes(id)) total += parseFloat(el.value) || 0;
         });
-        document.getElementById('TotalDues').value = total;
-        let paid = parseFloat(document.getElementById('TotalPaid').value) || 0;
-        document.getElementById('Remaining').value = total - paid;
+        
+        // Background update for hidden sheet columns
+        if(document.getElementById('Total Dues')) document.getElementById('Total Dues').value = total;
+        
+        let paidNow = parseFloat(document.getElementById('manual_paid').value) || 0;
+        if(document.getElementById('Total Paid')) document.getElementById('Total Paid').value = paidNow;
+        
+        let bal = total - paidNow;
+        if(document.getElementById('Remaining')) document.getElementById('Remaining').value = bal;
+        
+        // Auto Date
+        if(document.getElementById('Paid Date')) document.getElementById('Paid Date').value = new Date().toLocaleDateString('en-GB');
+
+        // Update UI
+        document.getElementById('ui_total').innerText = total;
+        document.getElementById('ui_bal').innerText = bal;
     }
 
     async function saveData() {
         let data = { Month: document.getElementById('Month').value };
-        document.querySelectorAll('#dynamic-fields input').forEach(i => data[i.id] = i.value);
+        currentHeaders.forEach(h => {
+            let id = h.trim();
+            data[id] = document.getElementById(id).value;
+        });
         
-        let sId = data["StudentId"] || data["Student Id"];
-        if(!sId) return Swal.fire('Error', 'Student ID bhariye', 'error');
+        if(!data["Student Id"]) return Swal.fire('Error', 'Student ID is required', 'error');
 
         Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
         fetch(URL, { method: "POST", body: JSON.stringify(data) })
         .then(res => res.text()).then(res => {
             if(res.includes("Success")) {
-                Swal.fire('Saved!', 'Fees record updated.', 'success');
+                Swal.fire('Saved!', 'Data posted to Columns L-O', 'success');
                 showR(data);
             } else { Swal.fire('Error', res, 'error'); }
         });
     }
 
     function showR(r) {
-        document.getElementById('r_id').innerText = r["Student Id"] || r["StudentId"] || "N/A";
-        document.getElementById('r_name').innerText = r["Student Name"] || r["StudentName"] || "N/A";
-        document.getElementById('r_father').innerText = r["Father Name"] || r["FatherName"] || "N/A";
+        document.getElementById('r_id').innerText = r["Student Id"] || "N/A";
+        document.getElementById('r_name').innerText = r["Student Name"] || "N/A";
         document.getElementById('r_class').innerText = r.Class || "N/A";
         document.getElementById('r_mon').innerText = r.Month || "N/A";
-        document.getElementById('r_date').innerText = new Date().toLocaleDateString('en-GB');
+        document.getElementById('r_date').innerText = r["Paid Date"] || new Date().toLocaleDateString('en-GB');
 
         let html = "";
-        let skip = ["StudentId", "Student Name", "StudentId", "Student Name", "FatherName", "Father Name", "Class", "Month", "PaidDate", "TotalDues", "TotalPaid", "Remaining"];
+        let skipForItems = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
         
         currentHeaders.forEach(h => {
             let id = h.trim();
-            if(!skip.includes(id) && r[id] && r[id] != 0) {
+            if(!skipForItems.includes(id) && r[id] && r[id] != 0) {
+                // Formatting Amount with ₹ sign in receipt table
                 html += `<tr><td>${h}</td><td align="right">₹${r[id]}</td></tr>`;
             }
         });
 
-        document.getElementById('r_paid').innerText = "₹" + (r.TotalPaid || 0);
-        document.getElementById('r_rem').innerText = "₹" + (r.Remaining || 0);
         document.getElementById('r_items').innerHTML = html;
+        document.getElementById('r_paid').innerText = "₹" + (r["Total Paid"] || 0);
+        document.getElementById('r_rem').innerText = "₹" + (r["Remaining"] || 0);
         document.getElementById('receipt-modal').style.display = 'block';
     }
 
@@ -247,9 +237,10 @@
                     <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">View</button>
                 </div>`;
             });
-            document.getElementById('res-list').innerHTML = h || "No records.";
+            document.getElementById('res-list').innerHTML = h || "No records found.";
         });
     }
+
     function closeR() { document.getElementById('receipt-modal').style.display = 'none'; }
 </script>
 </body>
