@@ -177,21 +177,25 @@
     }
 
     function showR(r) {
-        document.getElementById('r_id').innerText = r["Student Id"] || r.id;
-        document.getElementById('r_name').innerText = r["Student Name"] || r.name;
-        document.getElementById('r_class').innerText = r.Class || r.class;
+        document.getElementById('r_id').innerText = r["Student Id"] || "";
+        document.getElementById('r_name').innerText = r["Student Name"] || "";
+        document.getElementById('r_class').innerText = r.Class || "";
         document.getElementById('r_father').innerText = r["Father Name"] || "";
         document.getElementById('r_mon').innerText = r.Month || "";
         document.getElementById('r_date').innerText = r["Paid Date"] || new Date().toLocaleDateString('en-GB');
+        
         let h = "";
         let skip = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
-        Object.keys(r).forEach(k => { if(!skip.includes(k) && parseFloat(r[k]) > 0) h += `<tr><td>${k}</td><td align="right">₹${r[k]}</td></tr>`; });
-        // Handle direct view from report
-        if(r.dues && !h) h = `<tr><td>Total Fee</td><td align="right">₹${r.dues}</td></tr>`;
+        
+        Object.keys(r).forEach(k => { 
+            if(!skip.includes(k) && r[k] && parseFloat(r[k]) > 0) {
+                h += `<tr><td>${k}</td><td align="right">₹${r[k]}</td></tr>`;
+            } 
+        });
         
         document.getElementById('r_items').innerHTML = h;
-        document.getElementById('r_paid').innerText = "₹" + (r["Total Paid"] || r.paid || 0);
-        document.getElementById('r_rem').innerText = "₹" + (r["Remaining"] || r.bal || 0);
+        document.getElementById('r_paid').innerText = "₹" + (r["Total Paid"] || 0);
+        document.getElementById('r_rem').innerText = "₹" + (r["Remaining"] || 0);
         document.getElementById('receipt-modal').style.display = 'block';
     }
 
@@ -204,9 +208,10 @@
         document.getElementById('res-list').innerHTML = "";
         if(data.length === 0) return document.getElementById('res-list').innerHTML = `<div style="color:red; text-align:center;">No records found.</div>`;
         data.forEach(r => {
+            let rowData = JSON.stringify(r).replace(/'/g, "\\'");
             document.getElementById('res-list').innerHTML += `<div style="padding:12px; border:1px solid #ddd; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; background:#fff;">
                 <span><b>${r.Month}</b><br><small>${r["Student Name"]} | Paid: ₹${r["Total Paid"]}</small></span>
-                <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:6px 12px; border-radius:5px; font-size:11px;">View Receipt</button>
+                <button onclick='showR(${rowData})' style="background:var(--p); color:white; border:none; padding:6px 12px; border-radius:5px; font-size:11px;">View Receipt</button>
             </div>`;
         });
     }
@@ -235,12 +240,12 @@
                     <th style="padding:8px; border:1px solid #ddd;">Paid</th>
                     <th style="padding:8px; border:1px solid #ddd;">Bal</th>
                 </tr></thead><tbody>`;
+        
         result.rows.forEach(r => {
-            let rowData = JSON.stringify(r).replace(/'/g, "\\'");
             h += `<tr>
                 <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.id}</td>
                 <td style="padding:8px; border:1px solid #ddd;">
-                   <span style="color:blue; text-decoration:underline; cursor:pointer; font-weight:bold;" onclick='showR(${rowData})'>${r.name}</span>
+                   <span style="color:blue; text-decoration:underline; cursor:pointer; font-weight:bold;" onclick="fetchAndShow('${r.id}')">${r.name}</span>
                 </td>
                 <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.class}</td>
                 <td style="padding:8px; border:1px solid #ddd; text-align:right;">₹${r.dues}</td>
@@ -249,6 +254,18 @@
             </tr>`;
         });
         tableDiv.innerHTML = h + "</tbody></table>";
+    }
+
+    // Ye function Report se click hone par poora data fetch karega bina Code.gs badle
+    async function fetchAndShow(id) {
+        Swal.fire({title: 'Opening Receipt...', didOpen: () => Swal.showLoading(), timer: 2000});
+        let res = await fetch(URL + "?action=searchData&id=" + id);
+        let data = await res.json();
+        let currentMonth = document.getElementById('rep_month').value;
+        // Wahi record dhoondho jo abhi report mein hai
+        let record = data.find(x => x.Month === currentMonth) || data[0];
+        if(record) showR(record);
+        else Swal.fire('Error', 'Details nahi mil payi', 'error');
     }
 
     function closeR() { document.getElementById('receipt-modal').style.display = 'none'; }
