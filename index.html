@@ -17,13 +17,11 @@
         .btn-save { width: 100%; padding: 14px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; margin-top: 15px; cursor: pointer; }
         .hidden-field { display: none !important; }
 
-        /* Report Summary Cards */
         .report-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 15px 0; }
         .card { padding: 12px 5px; border-radius: 10px; color: white; text-align: center; }
         .card b { display: block; font-size: 16px; }
         .card small { font-size: 10px; font-weight: bold; }
 
-        /* Receipt Styles */
         #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
         .receipt-box { max-width: 400px; margin: 10px auto; border: 2px solid var(--p); border-radius: 15px; padding: 20px; }
         .r-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; }
@@ -80,7 +78,6 @@
         <div class="card" style="background:var(--green);"><small>Total Paid</small><b id="sp">0</b></div>
         <div class="card" style="background:var(--red);"><small>Remaining</small><b id="sb">0</b></div>
     </div>
-    
     <div id="rep-table-container" style="overflow-x:auto;"></div>
 </div>
 
@@ -180,18 +177,21 @@
     }
 
     function showR(r) {
-        document.getElementById('r_id').innerText = r["Student Id"];
-        document.getElementById('r_name').innerText = r["Student Name"];
-        document.getElementById('r_class').innerText = r.Class;
+        document.getElementById('r_id').innerText = r["Student Id"] || r.id;
+        document.getElementById('r_name').innerText = r["Student Name"] || r.name;
+        document.getElementById('r_class').innerText = r.Class || r.class;
         document.getElementById('r_father').innerText = r["Father Name"] || "";
-        document.getElementById('r_mon').innerText = r.Month;
+        document.getElementById('r_mon').innerText = r.Month || "";
         document.getElementById('r_date').innerText = r["Paid Date"] || new Date().toLocaleDateString('en-GB');
         let h = "";
         let skip = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
         Object.keys(r).forEach(k => { if(!skip.includes(k) && parseFloat(r[k]) > 0) h += `<tr><td>${k}</td><td align="right">₹${r[k]}</td></tr>`; });
+        // Handle direct view from report
+        if(r.dues && !h) h = `<tr><td>Total Fee</td><td align="right">₹${r.dues}</td></tr>`;
+        
         document.getElementById('r_items').innerHTML = h;
-        document.getElementById('r_paid').innerText = "₹" + (r["Total Paid"] || 0);
-        document.getElementById('r_rem').innerText = "₹" + (r["Remaining"] || 0);
+        document.getElementById('r_paid').innerText = "₹" + (r["Total Paid"] || r.paid || 0);
+        document.getElementById('r_rem').innerText = "₹" + (r["Remaining"] || r.bal || 0);
         document.getElementById('receipt-modal').style.display = 'block';
     }
 
@@ -202,7 +202,7 @@
         let res = await fetch(URL + "?action=searchData&id=" + id);
         let data = await res.json();
         document.getElementById('res-list').innerHTML = "";
-        if(data.length === 0) return document.getElementById('res-list').innerHTML = `<div style="color:red; text-align:center;">No records found for ID: ${id}</div>`;
+        if(data.length === 0) return document.getElementById('res-list').innerHTML = `<div style="color:red; text-align:center;">No records found.</div>`;
         data.forEach(r => {
             document.getElementById('res-list').innerHTML += `<div style="padding:12px; border:1px solid #ddd; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; background:#fff;">
                 <span><b>${r.Month}</b><br><small>${r["Student Name"]} | Paid: ₹${r["Total Paid"]}</small></span>
@@ -215,46 +215,40 @@
         let m = document.getElementById('rep_month').value;
         let tableDiv = document.getElementById('rep-table-container');
         tableDiv.innerHTML = "<p style='text-align:center;'>Fetching Report...</p>";
-        
-        try {
-            let res = await fetch(URL + "?action=getReportData&month=" + m);
-            let result = await res.json();
-            
-            if(result.rows.length === 0) {
-                tableDiv.innerHTML = "<p style='color:red; text-align:center;'>No record found for " + m + "</p>";
-                document.getElementById('summary-cards').style.display = "none";
-                return;
-            }
-
-            document.getElementById('summary-cards').style.display = "grid";
-            document.getElementById('sd').innerText = "₹" + result.summary.tDues;
-            document.getElementById('sp').innerText = "₹" + result.summary.tPaid;
-            document.getElementById('sb').innerText = "₹" + result.summary.tBal;
-
-            let h = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px; background:white;">
-                    <thead><tr style="background:var(--p); color:white;">
-                        <th style="padding:8px; border:1px solid #ddd;">ID</th>
-                        <th style="padding:8px; border:1px solid #ddd;">Name</th>
-                        <th style="padding:8px; border:1px solid #ddd;">Class</th>
-                        <th style="padding:8px; border:1px solid #ddd;">Dues</th>
-                        <th style="padding:8px; border:1px solid #ddd;">Paid</th>
-                        <th style="padding:8px; border:1px solid #ddd;">Bal</th>
-                    </tr></thead><tbody>`;
-            
-            result.rows.forEach(r => {
-                h += `<tr>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.id}</td>
-                    <td style="padding:8px; border:1px solid #ddd;">${r.name}</td>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.class}</td>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:right;">₹${r.dues}</td>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:right; color:blue; font-weight:bold;">₹${r.paid}</td>
-                    <td style="padding:8px; border:1px solid #ddd; text-align:right; color:red; font-weight:bold;">₹${r.bal}</td>
-                </tr>`;
-            });
-            tableDiv.innerHTML = h + "</tbody></table>";
-        } catch(e) {
-            tableDiv.innerHTML = "Error loading report.";
+        let res = await fetch(URL + "?action=getReportData&month=" + m);
+        let result = await res.json();
+        if(result.rows.length === 0) {
+            tableDiv.innerHTML = "<p style='color:red; text-align:center;'>No record found.</p>";
+            document.getElementById('summary-cards').style.display = "none";
+            return;
         }
+        document.getElementById('summary-cards').style.display = "grid";
+        document.getElementById('sd').innerText = "₹" + result.summary.tDues;
+        document.getElementById('sp').innerText = "₹" + result.summary.tPaid;
+        document.getElementById('sb').innerText = "₹" + result.summary.tBal;
+        let h = `<table style="width:100%; border-collapse:collapse; font-size:12px; margin-top:10px; background:white;">
+                <thead><tr style="background:var(--p); color:white;">
+                    <th style="padding:8px; border:1px solid #ddd;">ID</th>
+                    <th style="padding:8px; border:1px solid #ddd;">Name</th>
+                    <th style="padding:8px; border:1px solid #ddd;">Class</th>
+                    <th style="padding:8px; border:1px solid #ddd;">Dues</th>
+                    <th style="padding:8px; border:1px solid #ddd;">Paid</th>
+                    <th style="padding:8px; border:1px solid #ddd;">Bal</th>
+                </tr></thead><tbody>`;
+        result.rows.forEach(r => {
+            let rowData = JSON.stringify(r).replace(/'/g, "\\'");
+            h += `<tr>
+                <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.id}</td>
+                <td style="padding:8px; border:1px solid #ddd;">
+                   <span style="color:blue; text-decoration:underline; cursor:pointer; font-weight:bold;" onclick='showR(${rowData})'>${r.name}</span>
+                </td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:center;">${r.class}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;">₹${r.dues}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right; color:blue; font-weight:bold;">₹${r.paid}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right; color:red; font-weight:bold;">₹${r.bal}</td>
+            </tr>`;
+        });
+        tableDiv.innerHTML = h + "</tbody></table>";
     }
 
     function closeR() { document.getElementById('receipt-modal').style.display = 'none'; }
