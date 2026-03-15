@@ -5,10 +5,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root { --p: #1a237e; --s: #ff5252; --bg: #f4f7f6; }
+        :root { --p: #1a237e; --s: #ff5252; --bg: #f4f7f6; --blue: #0000FF; --red: #FF0000; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding-top: 70px; }
         
-        /* Navbar */
         .nav { background: var(--p); display: flex; justify-content: center; padding: 12px; gap: 15px; position: fixed; top: 0; width: 100%; z-index: 1000; }
         .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; }
         .nav button.active { background: #ff9800 !important; color: #000 !important; }
@@ -18,34 +17,37 @@
         label { font-size: 11px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
         input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         
+        /* Dashboard Display Colors */
         .calc-display { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; text-align: center; }
-        .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        #ui_paid_val { color: var(--blue); font-weight: bold; font-size: 18px; }
+        #ui_bal { color: var(--red); font-weight: bold; font-size: 18px; }
 
+        .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
         .hidden-field { display: none !important; }
 
-        /* RECEIPT DESIGN - SAME AS SAVED ENTRY */
+        /* RECEIPT DESIGN */
         #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
-        .receipt-box { max-width: 450px; margin: 20px auto; border: 2px solid var(--p); border-radius: 20px; padding: 25px; background: #fff; box-sizing: border-box; }
-        .r-header { text-align: center; border-bottom: 2px solid var(--p); padding-bottom: 10px; margin-bottom: 15px; }
-        .r-logo { width: 80px; height: 80px; border: 2px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; }
+        .receipt-box { max-width: 450px; margin: 15px auto; border: 2.5px solid var(--p); border-radius: 20px; padding: 25px; background: #fff; }
+        .r-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+        .r-logo { width: 80px; height: 80px; border: 2px solid var(--p); border-radius: 50%; margin: 0 auto 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff; }
         .r-logo img { width: 100%; height: 100%; object-fit: cover; }
         .school-name { margin: 0; color: var(--p); font-size: 24px; font-weight: 800; text-transform: uppercase; }
         .fee-badge { background: var(--p); color: white; padding: 4px 15px; border-radius: 20px; font-size: 12px; display: inline-block; margin-top: 5px; }
         
-        .r-meta { display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 14px; color: #000; }
-        .r-student-info { padding: 15px 0; line-height: 1.8; font-size: 15px; color: #000; }
+        .r-meta { display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 14px; }
+        .r-student-info { padding: 15px 0; line-height: 1.8; font-size: 15px; border-bottom: 2px solid #333; }
         
         .r-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .r-table th { text-align: left; border-top: 2px solid #333; border-bottom: 2px solid #333; padding: 8px 0; }
-        .r-table td { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 15px; color: #333; }
+        .r-table th { text-align: left; border-bottom: 1.5px solid #333; padding: 8px 0; }
+        .r-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
         
-        .r-total-row { font-weight: bold; color: var(--p); font-size: 16px; }
-        .r-balance-row { font-weight: bold; color: var(--s); font-size: 16px; }
+        .r-total-row { font-weight: bold; color: var(--blue); font-size: 16px; }
+        .r-balance-row { font-weight: bold; color: var(--red); font-size: 16px; }
         
-        .signature-box { margin-top: 40px; text-align: right; }
-        .sig-line { border-top: 1.5px solid #333; padding-top: 5px; font-weight: bold; font-size: 13px; display: inline-block; min-width: 150px; }
+        .sig-box { margin-top: 40px; text-align: right; }
+        .sig-line { border-top: 1.5px solid #333; padding-top: 5px; font-weight: bold; display: inline-block; min-width: 150px; }
 
-        @media print { .no-print { display: none !important; } #receipt-modal { position: absolute; top: 0; left:0; width: 100%; } }
+        @media print { .no-print { display: none !important; } #receipt-modal { position: absolute; top: 0; } }
     </style>
 </head>
 <body>
@@ -53,18 +55,17 @@
 <div class="nav no-print">
     <button id="b1" class="active" onclick="tab('entry')">NEW ENTRY</button>
     <button id="b2" onclick="tab('search')">SEARCH</button>
+    <button onclick="showReportTab()">REPORT</button>
 </div>
 
 <div id="entry-div" class="container no-print">
-    <div style="margin-bottom:15px;">
-        <label>Select Month</label>
-        <select id="Month" onchange="loadDynamicUI()">
-            <option>January</option><option>February</option><option>March</option>
-            <option>April</option><option>May</option><option>June</option>
-            <option>July</option><option>August</option><option>September</option>
-            <option>October</option><option>November</option><option>December</option>
-        </select>
-    </div>
+    <label>Select Month</label>
+    <select id="Month" onchange="loadDynamicUI()" style="margin-bottom:15px;">
+        <option>January</option><option>February</option><option>March</option>
+        <option>April</option><option>May</option><option>June</option>
+        <option>July</option><option>August</option><option>September</option>
+        <option>October</option><option>November</option><option>December</option>
+    </select>
     <div id="dynamic-fields" class="grid"></div>
     <div style="margin-top:15px;">
         <label>Amount to Pay Now (₹)</label>
@@ -74,9 +75,16 @@
 </div>
 
 <div id="search-div" class="container no-print" style="display:none">
-    <input type="text" id="q_id" placeholder="Enter Student ID (e.g. 5)">
-    <button onclick="findData()" style="width:100%; margin-top:10px; padding:12px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">SEARCH RECORDS</button>
+    <input type="text" id="q_id" placeholder="Enter Student ID">
+    <button onclick="findData()" style="width:100%; margin-top:10px; padding:12px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold;">SEARCH ALL MONTHS</button>
     <div id="res-list" style="margin-top:20px;"></div>
+</div>
+
+<div id="report-div" class="container no-print" style="display:none">
+    <h3 style="text-align:center; color:var(--p);">Collection Report</h3>
+    <select id="rep_month" style="margin-bottom:10px;"></select>
+    <button onclick="loadReport()" style="width:100%; padding:10px; background:var(--p); color:white; border-radius:8px;">GENERATE</button>
+    <div id="report-content" style="margin-top:20px; font-size:12px;"></div>
 </div>
 
 <div id="receipt-modal">
@@ -84,7 +92,7 @@
         <div class="r-header">
             <div class="r-logo" id="logo-container">IPS</div>
             <h2 class="school-name">IQRA PUBLIC SCHOOL</h2>
-            <div style="font-size:11px; color:#444;">Mathurapur, Barsoi, Katihar</div>
+            <div style="font-size:11px;">Mathurapur, Barsoi, Katihar</div>
             <div class="fee-badge">FEE RECEIPT</div>
         </div>
         <div class="r-meta">
@@ -100,10 +108,10 @@
             <tbody id="r_items"></tbody>
             <tfoot>
                 <tr class="r-total-row"><td>TOTAL PAID</td><td align="right" id="r_paid"></td></tr>
-                <tr class="r-balance-row"><td>Balance</td><td align="right" id="r_rem"></td></tr>
+                <tr class="r-balance-row"><td>Remaining Balance</td><td align="right" id="r_rem"></td></tr>
             </tfoot>
         </table>
-        <div class="signature-box"><span class="sig-line">Principal Signature</span></div>
+        <div class="sig-box"><span class="sig-line">Principal Signature</span></div>
         <div class="no-print" style="margin-top:25px; display:flex; gap:10px;">
             <button onclick="window.print()" style="flex:1; padding:12px; background:var(--p); color:white; border-radius:8px; font-weight:bold;">PRINT</button>
             <button onclick="closeR()" style="flex:1; padding:12px; background:#666; color:white; border-radius:8px; font-weight:bold;">BACK</button>
@@ -112,88 +120,97 @@
 </div>
 
 <script>
-    const URL = "https://script.google.com/macros/s/AKfycbwt8zV_5jonexD9WT7Fd1v8XF_90xq7AClOOFycJCO353sppYvTp0O9lv1Pw5Ymxcee/exec";
-    const LOGO_URL = ""; 
+    const URL = "https://script.google.com/macros/s/AKfycbxTIUPbsrAcGUJ_ObT4FwO8CFMhjRuSvNsTn4pk0CsmVgcCK49k51LcV7_9EttYxpfW/exec";
+    const LOGO_URL = "https://i.ibb.co/G4v0S0S/logo.png"; // Aapka logo yahan set hai
 
     let currentHeaders = [];
-    window.onload = () => { loadDynamicUI(); if(LOGO_URL) document.getElementById('logo-container').innerHTML = `<img src="${LOGO_URL}">`; };
+    window.onload = () => { 
+        loadDynamicUI(); 
+        if(LOGO_URL) document.getElementById('logo-container').innerHTML = `<img src="${LOGO_URL}">`;
+        // Populate report month dropdown
+        let months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        let sel = document.getElementById('rep_month');
+        months.forEach(m => sel.innerHTML += `<option>${m}</option>`);
+    };
 
     function tab(t) {
         document.getElementById('entry-div').style.display = t==='entry'?'block':'none';
         document.getElementById('search-div').style.display = t==='search'?'block':'none';
+        document.getElementById('report-div').style.display = 'none';
         document.getElementById('b1').className = t==='entry'?'active':'';
         document.getElementById('b2').className = t==='search'?'active':'';
+    }
+
+    function showReportTab() {
+        document.getElementById('entry-div').style.display = 'none';
+        document.getElementById('search-div').style.display = 'none';
+        document.getElementById('report-div').style.display = 'block';
+        document.getElementById('b1').className = '';
+        document.getElementById('b2').className = '';
     }
 
     async function loadDynamicUI() {
         let m = document.getElementById('Month').value;
         let container = document.getElementById('dynamic-fields');
-        container.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading fields...</p>";
-        try {
-            let res = await fetch(URL + "?action=getHeaders&month=" + m);
-            currentHeaders = await res.json();
-            container.innerHTML = ""; 
-            let hiddenFromUI = ["Total Dues", "Total Paid", "Paid Date", "Remaining", "Month"];
-            currentHeaders.forEach(h => {
-                let id = h.trim();
-                let div = document.createElement('div');
-                if(hiddenFromUI.includes(id)) div.className = "hidden-field";
-                if(["Student Name", "Father Name", "Student Id"].includes(id)) div.style.gridColumn = "span 2";
-                div.innerHTML = `<label>${h}</label><input type="text" id="${id}" oninput="doCalc()">`;
-                container.appendChild(div);
-            });
-            container.innerHTML += `<div class="calc-display"><div><label>Total</label><div id="ui_total">0</div></div><div><label>Paid</label><div id="ui_paid_val">0</div></div><div><label>Balance</label><div id="ui_bal" style="color:red;">0</div></div></div>`;
-        } catch (e) { container.innerHTML = "Error."; }
+        container.innerHTML = "Syncing fields...";
+        let res = await fetch(URL + "?action=getHeaders&month=" + m);
+        currentHeaders = await res.json();
+        container.innerHTML = "";
+        let hidden = ["Total Dues", "Total Paid", "Paid Date", "Remaining", "Month"];
+        currentHeaders.forEach(h => {
+            let div = document.createElement('div');
+            if(hidden.includes(h)) div.className = "hidden-field";
+            if(["Student Name", "Father Name", "Student Id"].includes(h)) div.style.gridColumn = "span 2";
+            div.innerHTML = `<label>${h}</label><input type="text" id="${h}" oninput="doCalc()">`;
+            container.appendChild(div);
+        });
+        container.innerHTML += `<div class="calc-display"><div><label>Total</label><div id="ui_total">0</div></div><div><label>Paid</label><div id="ui_paid_val">0</div></div><div><label>Balance</label><div id="ui_bal">0</div></div></div>`;
     }
 
     function doCalc() {
         let total = 0;
         let skip = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
         currentHeaders.forEach(h => {
-            let id = h.trim();
-            let el = document.getElementById(id);
-            if(el && !skip.includes(id)) total += parseFloat(el.value) || 0;
+            let el = document.getElementById(h);
+            if(el && !skip.includes(h)) total += parseFloat(el.value) || 0;
         });
-        if(document.getElementById('Total Dues')) document.getElementById('Total Dues').value = total;
         let paid = parseFloat(document.getElementById('manual_paid').value) || 0;
-        if(document.getElementById('Total Paid')) document.getElementById('Total Paid').value = paid;
-        let rem = total - paid;
-        if(document.getElementById('Remaining')) document.getElementById('Remaining').value = rem;
-        if(document.getElementById('Paid Date')) document.getElementById('Paid Date').value = new Date().toLocaleDateString('en-GB');
         document.getElementById('ui_total').innerText = total;
         document.getElementById('ui_paid_val').innerText = paid;
-        document.getElementById('ui_bal').innerText = rem;
+        document.getElementById('ui_bal').innerText = total - paid;
+        
+        if(document.getElementById('Total Dues')) document.getElementById('Total Dues').value = total;
+        if(document.getElementById('Total Paid')) document.getElementById('Total Paid').value = paid;
+        if(document.getElementById('Remaining')) document.getElementById('Remaining').value = total - paid;
     }
 
     async function saveData() {
         let data = { Month: document.getElementById('Month').value };
-        currentHeaders.forEach(h => { let id = h.trim(); data[id] = document.getElementById(id).value; });
-        if(!data["Student Id"]) return Swal.fire('Wait', 'Student Id bhariye', 'info');
-        Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        fetch(URL, { method: "POST", body: JSON.stringify(data) }).then(res => res.text()).then(res => {
-            if(res.includes("Success")) { Swal.fire('Saved!', '', 'success'); showR(data); }
-            else { Swal.fire('Error', res, 'error'); }
-        });
+        currentHeaders.forEach(h => { data[h] = document.getElementById(h).value; });
+        if(!data["Student Id"]) return Swal.fire('Error', 'ID bhariye', 'error');
+        
+        Swal.fire({title: 'Saving Data...', didOpen: () => Swal.showLoading()});
+        let res = await fetch(URL, {method: 'POST', body: JSON.stringify(data)});
+        let txt = await res.text();
+        if(txt === "Success") {
+            Swal.fire('Saved Successfully!', '', 'success');
+            showR(data);
+        }
     }
 
-    // THIS FUNCTION SHOWS THE SAME RECEIPT DESIGN
     function showR(r) {
-        document.getElementById('r_id').innerText = r["Student Id"] || "N/A";
-        document.getElementById('r_name').innerText = r["Student Name"] || "N/A";
-        document.getElementById('r_father').innerText = r["Father Name"] || "N/A";
-        document.getElementById('r_class').innerText = r.Class || "N/A";
-        document.getElementById('r_mon').innerText = r.Month || "N/A";
+        document.getElementById('r_id').innerText = r["Student Id"];
+        document.getElementById('r_name').innerText = r["Student Name"];
+        document.getElementById('r_father').innerText = r["Father Name"];
+        document.getElementById('r_class').innerText = r.Class;
+        document.getElementById('r_mon').innerText = r.Month;
         document.getElementById('r_date').innerText = r["Paid Date"] || new Date().toLocaleDateString('en-GB');
+        
         let html = "";
-        let skipItems = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
-        
-        // Dynamic list of fees
-        Object.keys(r).forEach(key => {
-            if(!skipItems.includes(key) && r[key] && r[key] != 0 && r[key] != "") {
-                html += `<tr><td>${key}</td><td align="right">₹${r[key]}</td></tr>`;
-            }
+        let skip = ["Student Id", "Student Name", "Father Name", "Class", "Month", "Paid Date", "Total Dues", "Total Paid", "Remaining"];
+        Object.keys(r).forEach(k => {
+            if(!skip.includes(k) && r[k] > 0) html += `<tr><td>${k}</td><td align="right">₹${r[k]}</td></tr>`;
         });
-        
         document.getElementById('r_items').innerHTML = html;
         document.getElementById('r_paid').innerText = "₹" + (r["Total Paid"] || 0);
         document.getElementById('r_rem').innerText = "₹" + (r["Remaining"] || 0);
@@ -201,26 +218,38 @@
     }
 
     async function findData() {
-        let idVal = document.getElementById('q_id').value.trim();
-        if(!idVal) return Swal.fire('Wait', 'Student Id likhiye', 'info');
-        document.getElementById('res-list').innerHTML = "Searching...";
-        try {
-            let res = await fetch(URL + "?action=searchData&Student Id=" + encodeURIComponent(idVal));
-            let data = await res.json();
-            let h = "";
-            if(data.length === 0) {
-                h = "<p style='text-align:center; color:red;'>No records found for ID: " + idVal + "</p>";
-            } else {
-                data.forEach(r => {
-                    let sName = r["Student Name"] || "N/A";
-                    h += `<div style="padding:15px; border:1px solid #ddd; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; background:white; align-items:center;">
-                        <span><b>${r.Month}</b><br><small>${sName}</small></span>
-                        <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;">View Receipt</button>
-                    </div>`;
-                });
-            }
-            document.getElementById('res-list').innerHTML = h;
-        } catch(e) { document.getElementById('res-list').innerHTML = "Error fetching data."; }
+        let id = document.getElementById('q_id').value;
+        if(!id) return Swal.fire('Wait', 'ID Likhiye', 'info');
+        document.getElementById('res-list').innerHTML = "Searching all months...";
+        let res = await fetch(URL + "?action=searchData&id=" + id);
+        let data = await res.json();
+        document.getElementById('res-list').innerHTML = "";
+        if(data.length === 0) return document.getElementById('res-list').innerHTML = "No record found.";
+        
+        data.forEach(r => {
+            document.getElementById('res-list').innerHTML += `
+            <div style="padding:15px; border:1px solid #ddd; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; background:#fff;">
+                <span><b>${r.Month}</b><br><small>${r["Student Name"]} | Paid: ₹${r["Total Paid"]}</small></span>
+                <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;">View</button>
+            </div>`;
+        });
+    }
+
+    async function loadReport() {
+        let m = document.getElementById('rep_month').value;
+        let content = document.getElementById('report-content');
+        content.innerHTML = "Loading Report...";
+        let res = await fetch(URL + "?action=getReportData&month=" + m);
+        let data = await res.json();
+        if(data.length === 0) return content.innerHTML = "No data for this month.";
+        
+        let h = `<table border="1" style="width:100%; border-collapse:collapse; text-align:left;">
+                <tr style="background:#eee;"><th>ID</th><th>Name</th><th>Paid</th><th>Bal</th></tr>`;
+        data.forEach(r => {
+            h += `<tr><td>${r["Student Id"]}</td><td>${r["Student Name"]}</td><td>${r["Total Paid"]}</td><td style="color:red;">${r["Remaining"]}</td></tr>`;
+        });
+        h += `</table>`;
+        content.innerHTML = h;
     }
 
     function closeR() { document.getElementById('receipt-modal').style.display = 'none'; }
