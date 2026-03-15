@@ -22,7 +22,7 @@
         .calc-box { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; }
         .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
 
-        /* --- UPDATED RECEIPT DESIGN (Matching Screenshot) --- */
+        /* --- UPDATED RECEIPT DESIGN --- */
         #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
         .receipt-box { 
             max-width: 420px; 
@@ -35,8 +35,9 @@
             box-sizing: border-box;
         }
         .r-header { text-align: center; margin-bottom: 15px; }
-        .r-logo { width: 75px; height: 75px; border: 2.5px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--p); font-weight: bold; font-size: 20px; }
+        .r-logo { width: 75px; height: 75px; border: 2.5px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--p); font-weight: bold; font-size: 20px; background: #fff; }
         .r-logo img { width: 100%; height: 100%; object-fit: cover; }
+        
         .school-name { margin: 0; color: var(--p); font-size: 22px; font-weight: 800; text-transform: uppercase; }
         .fee-tag { background: var(--p); color: white; padding: 5px 25px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 5px; }
         
@@ -52,6 +53,7 @@
         .r-footer { margin-top: 80px; text-align: right; }
         .sig-line { display: inline-block; width: 160px; border-top: 2px solid #333; padding-top: 5px; font-weight: 700; font-size: 13px; }
 
+        /* @print android media */
         @media print {
             .no-print { display: none !important; }
             #receipt-modal { position: absolute; top: 0; padding: 0; width: 100%; }
@@ -77,8 +79,7 @@
             <option>October</option><option>November</option><option>December</option>
         </select>
     </div>
-    <div id="dynamic-fields" class="grid">
-        </div>
+    <div id="dynamic-fields" class="grid"></div>
     <button class="btn-save" onclick="saveData()">SAVE & PRINT RECEIPT 🖨️</button>
 </div>
 
@@ -91,9 +92,7 @@
 <div id="receipt-modal">
     <div class="receipt-box">
         <div class="r-header">
-            <div class="r-logo" id="logo-container">
-                <span id="logo-text">IPS</span>
-            </div>
+            <div class="r-logo" id="logo-container">IPS</div>
             <h2 class="school-name">IQRA PUBLIC SCHOOL</h2>
             <p style="font-size:11px; margin:4px; color:#444;">Mathurapur, Barsoi, Katihar</p>
             <div class="fee-tag">FEE RECEIPT</div>
@@ -155,23 +154,20 @@
         try {
             let res = await fetch(URL + "?action=getHeaders&month=" + m);
             currentHeaders = await res.json();
-            
-            // CRITICAL: Pehle purana saaf karna hai (No more repeating fields)
             container.innerHTML = ""; 
             
             let skip = ["PaidDate", "TotalDues", "TotalPaid", "Remaining", "Month"];
 
             currentHeaders.forEach(h => {
-                if(!skip.includes(h.trim())) {
+                let cleanH = h.trim();
+                if(!skip.includes(cleanH)) {
                     let div = document.createElement('div');
-                    // ID aur Name ko full width dena hai
-                    if(["StudentName", "FatherName", "StudentId"].includes(h.trim())) div.style.gridColumn = "span 2";
-                    div.innerHTML = `<label>${h}</label><input type="text" id="${h}" oninput="doCalc()">`;
+                    if(["StudentName", "FatherName", "StudentId", "Student Name", "Father Name", "Student Id"].includes(cleanH)) div.style.gridColumn = "span 2";
+                    div.innerHTML = `<label>${h}</label><input type="text" id="${cleanH}" oninput="doCalc()">`;
                     container.appendChild(div);
                 }
             });
             
-            // Calculation boxes ko niche fix kar dena hai
             container.innerHTML += `
                 <div class="calc-box">
                     <div><label>Total</label><input type="number" id="TotalDues" readonly></div>
@@ -185,10 +181,11 @@
 
     function doCalc() {
         let total = 0;
-        let nonFee = ["StudentId", "StudentName", "FatherName", "Class"];
+        let nonFee = ["StudentId", "StudentName", "FatherName", "Class", "Student Id", "Student Name", "Father Name"];
         currentHeaders.forEach(h => {
-            let el = document.getElementById(h);
-            if(el && !nonFee.includes(h) && !["PaidDate","TotalDues","TotalPaid","Remaining","Month"].includes(h)) {
+            let id = h.trim();
+            let el = document.getElementById(id);
+            if(el && !nonFee.includes(id) && !["PaidDate","TotalDues","TotalPaid","Remaining","Month"].includes(id)) {
                 total += parseFloat(el.value) || 0;
             }
         });
@@ -199,9 +196,10 @@
 
     async function saveData() {
         let data = { Month: document.getElementById('Month').value };
-        document.querySelectorAll('#entry-div input').forEach(i => data[i.id] = i.value);
+        document.querySelectorAll('#dynamic-fields input').forEach(i => data[i.id] = i.value);
         
-        if(!data.StudentId) return Swal.fire('Error', 'Student ID bhariye', 'error');
+        let sId = data["StudentId"] || data["Student Id"];
+        if(!sId) return Swal.fire('Error', 'Student ID bhariye', 'error');
 
         Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
@@ -215,26 +213,26 @@
     }
 
     function showR(r) {
-        document.getElementById('r_id').innerText = r.StudentId || "N/A";
-        document.getElementById('r_name').innerText = r.StudentName || "N/A";
-        document.getElementById('r_father').innerText = r.FatherName || "N/A";
+        document.getElementById('r_id').innerText = r["Student Id"] || r["StudentId"] || "N/A";
+        document.getElementById('r_name').innerText = r["Student Name"] || r["StudentName"] || "N/A";
+        document.getElementById('r_father').innerText = r["Father Name"] || r["FatherName"] || "N/A";
         document.getElementById('r_class').innerText = r.Class || "N/A";
         document.getElementById('r_mon').innerText = r.Month || "N/A";
-        document.getElementById('r_date').innerText = r.PaidDate || new Date().toLocaleDateString('en-GB');
+        document.getElementById('r_date').innerText = new Date().toLocaleDateString('en-GB');
 
         let html = "";
-        let skip = ["StudentId", "StudentName", "FatherName", "Class", "Month", "PaidDate", "TotalDues", "TotalPaid", "Remaining"];
+        let skip = ["StudentId", "Student Name", "StudentId", "Student Name", "FatherName", "Father Name", "Class", "Month", "PaidDate", "TotalDues", "TotalPaid", "Remaining"];
         
-        // Headers ke order mein receipt rows generate karna
         currentHeaders.forEach(h => {
-            if(!skip.includes(h) && r[h] && r[h] != 0) {
-                html += `<tr><td>${h}</td><td align="right">₹${r[h]}</td></tr>`;
+            let id = h.trim();
+            if(!skip.includes(id) && r[id] && r[id] != 0) {
+                html += `<tr><td>${h}</td><td align="right">₹${r[id]}</td></tr>`;
             }
         });
 
-        document.getElementById('r_items').innerHTML = html;
         document.getElementById('r_paid').innerText = "₹" + (r.TotalPaid || 0);
         document.getElementById('r_rem').innerText = "₹" + (r.Remaining || 0);
+        document.getElementById('r_items').innerHTML = html;
         document.getElementById('receipt-modal').style.display = 'block';
     }
 
@@ -243,8 +241,9 @@
         fetch(URL + "?action=searchData&id=" + id).then(res => res.json()).then(res => {
             let h = "";
             res.forEach(r => {
+                let name = r["Student Name"] || r["StudentName"] || "Unknown";
                 h += `<div style="padding:15px; border:1px solid #ddd; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; background:white; align-items:center;">
-                    <span><b>${r.Month}</b> - ${r.StudentName}</span>
+                    <span><b>${r.Month}</b> - ${name}</span>
                     <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">View</button>
                 </div>`;
             });
