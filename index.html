@@ -8,23 +8,21 @@
         :root { --p: #1a237e; --s: #ff5252; --bg: #f4f7f6; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding-top: 70px; }
         
-        /* Navbar */
         .nav { background: var(--p); display: flex; justify-content: center; padding: 12px; gap: 15px; position: fixed; top: 0; width: 100%; z-index: 1000; }
         .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; }
         .nav button.active { background: #ff9800 !important; color: #000 !important; }
 
-        /* Form Container */
         .container { max-width: 550px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); border-top: 8px solid var(--p); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { font-size: 11px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
         input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         
-        .calc-display { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; text-align: center; }
+        .calc-display { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; text-align: center; }
         .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
 
         .hidden-field { display: none !important; }
 
-        /* RECEIPT DESIGN - MATCHING SCREENSHOT 1000290038.jpg */
+        /* EXACT RECEIPT DESIGN FROM SCREENSHOT */
         #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
         .receipt-box { max-width: 450px; margin: 20px auto; border: 2px solid var(--p); border-radius: 20px; padding: 25px; background: #fff; box-sizing: border-box; }
         .r-header { text-align: center; border-bottom: 2px solid var(--p); padding-bottom: 10px; margin-bottom: 15px; }
@@ -75,7 +73,7 @@
 </div>
 
 <div id="search-div" class="container no-print" style="display:none">
-    <input type="text" id="q_id" placeholder="Enter Student Id (e.g. 5)">
+    <input type="text" id="q_id" placeholder="Enter Student ID (e.g. 5)">
     <button onclick="findData()" style="width:100%; margin-top:10px; padding:12px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">SEARCH RECORDS</button>
     <div id="res-list" style="margin-top:20px;"></div>
 </div>
@@ -114,7 +112,7 @@
 
 <script>
     const URL = "https://script.google.com/macros/s/AKfycbwt8zV_5jonexD9WT7Fd1v8XF_90xq7AClOOFycJCO353sppYvTp0O9lv1Pw5Ymxcee/exec";
-    const LOGO_URL = ""; // Apna logo link yahan dalein
+    const LOGO_URL = ""; 
 
     let currentHeaders = [];
     window.onload = () => { loadDynamicUI(); if(LOGO_URL) document.getElementById('logo-container').innerHTML = `<img src="${LOGO_URL}">`; };
@@ -143,7 +141,7 @@
                 div.innerHTML = `<label>${h}</label><input type="text" id="${id}" oninput="doCalc()">`;
                 container.appendChild(div);
             });
-            container.innerHTML += `<div class="calc-display"><div><label>Total</label><div id="ui_total">0</div></div><div><label>Balance</label><div id="ui_bal" style="color:red;">0</div></div></div>`;
+            container.innerHTML += `<div class="calc-display"><div><label>Total</label><div id="ui_total">0</div></div><div><label>Paid</label><div id="ui_paid_val">0</div></div><div><label>Balance</label><div id="ui_bal" style="color:red;">0</div></div></div>`;
         } catch (e) { container.innerHTML = "Error."; }
     }
 
@@ -162,6 +160,7 @@
         if(document.getElementById('Remaining')) document.getElementById('Remaining').value = rem;
         if(document.getElementById('Paid Date')) document.getElementById('Paid Date').value = new Date().toLocaleDateString('en-GB');
         document.getElementById('ui_total').innerText = total;
+        document.getElementById('ui_paid_val').innerText = paid;
         document.getElementById('ui_bal').innerText = rem;
     }
 
@@ -198,19 +197,19 @@
     }
 
     async function findData() {
-        let id = document.getElementById('q_id').value.trim();
-        if(!id) return Swal.fire('Wait', 'Student Id likhiye', 'info');
+        let idVal = document.getElementById('q_id').value.trim();
+        if(!idVal) return Swal.fire('Wait', 'Student Id likhiye', 'info');
         document.getElementById('res-list').innerHTML = "Searching...";
         try {
-            // Updated fetch to handle Student Id properly
-            let res = await fetch(URL + "?action=searchData&id=" + encodeURIComponent(id));
+            // Updated fetch to match Google Sheet exact column name: "Student Id"
+            let res = await fetch(URL + "?action=searchData&Student Id=" + encodeURIComponent(idVal));
             let data = await res.json();
             let h = "";
             if(data.length === 0) {
-                h = "<p style='text-align:center; color:red;'>No records found for ID: " + id + "</p>";
+                h = "<p style='text-align:center; color:red;'>No records found for ID: " + idVal + "</p>";
             } else {
                 data.forEach(r => {
-                    let sName = r["Student Name"] || r["StudentName"] || "N/A";
+                    let sName = r["Student Name"] || "N/A";
                     h += `<div style="padding:15px; border:1px solid #ddd; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; background:white; align-items:center;">
                         <span><b>${r.Month}</b><br><small>${sName}</small></span>
                         <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;">View</button>
