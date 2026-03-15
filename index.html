@@ -8,65 +8,43 @@
         :root { --p: #1a237e; --s: #ff5252; --bg: #f4f7f6; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding-top: 70px; }
         
-        /* Navigation */
-        .nav { background: var(--p); display: flex; justify-content: center; padding: 12px; gap: 15px; position: fixed; top: 0; width: 100%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; transition: 0.3s; }
+        /* Navbar */
+        .nav { background: var(--p); display: flex; justify-content: center; padding: 12px; gap: 15px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; }
         .nav button.active { background: #ff9800; color: #000; }
 
-        /* Form Container */
         .container { max-width: 550px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); border-top: 8px solid var(--p); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { font-size: 11px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 14px; }
-        .calc-box { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); }
-        .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; transition: 0.3s; }
-        .btn-save:hover { background: #1b5e20; }
-
-        /* --- PROFESSIONAL RECEIPT DESIGN (SCREENSHOT STYLE) --- */
-        #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 15px; }
+        input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         
-        .receipt-box { 
-            max-width: 420px; 
-            margin: auto; 
-            background: #fff; 
-            border: 3px solid var(--p); 
-            border-radius: 25px; 
-            padding: 25px; 
-            position: relative;
-        }
+        .calc-box { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; }
+        .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
 
-        .r-header { text-align: center; margin-bottom: 20px; }
-        .r-logo-circle { 
-            width: 70px; height: 70px; border: 2.5px solid var(--p); border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-weight: 800; font-size: 26px; color: var(--p); margin: 0 auto 10px; 
-        }
-        .school-name { margin: 0; color: var(--p); font-size: 22px; font-weight: 700; text-transform: uppercase; }
-        .school-addr { font-size: 11px; color: #444; margin: 2px 0 10px; }
-        .fee-tag { background: var(--p); color: white; padding: 4px 25px; border-radius: 15px; font-size: 11px; font-weight: 600; display: inline-block; }
-
-        .r-meta { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; border-top: 2px solid #333; padding-top: 10px; margin-top: 10px; }
-        .r-student-info { font-size: 14px; margin: 15px 0; line-height: 1.8; }
+        /* --- PROFESSIONAL RECEIPT DESIGN --- */
+        #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
+        .receipt-box { max-width: 420px; margin: auto; border: 2.5px solid var(--p); border-radius: 25px; padding: 20px; position: relative; background: #fff; }
+        .r-header { text-align: center; margin-bottom: 15px; }
+        .r-logo { width: 70px; height: 70px; border: 2px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .r-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .school-name { margin: 0; color: var(--p); font-size: 20px; font-weight: 700; text-transform: uppercase; }
+        .fee-tag { background: var(--p); color: white; padding: 3px 20px; border-radius: 15px; font-size: 10px; display: inline-block; margin-top: 5px; }
         
+        .r-meta { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; border-top: 1.5px solid #333; padding-top: 8px; margin-top: 10px; }
         .r-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .r-table thead th { border-top: 2px solid #333; border-bottom: 2px solid #333; padding: 8px 0; text-align: left; font-size: 14px; }
-        .r-table td { padding: 10px 0; font-size: 14px; border-bottom: 1px solid #eee; }
+        .r-table th { border-top: 1.5px solid #333; border-bottom: 1.5px solid #333; padding: 8px 0; text-align: left; font-size: 13px; }
+        .r-table td { padding: 7px 0; font-size: 13px; border-bottom: 1px solid #eee; }
         
-        .r-total-row { font-weight: 700; color: var(--p); font-size: 15px; }
-        .r-bal-row { color: var(--s); font-weight: 700; font-size: 15px; }
+        .r-total-row { font-weight: 700; color: var(--p); }
+        .r-bal-row { color: var(--s); font-weight: 700; }
+        .r-footer { margin-top: 80px; text-align: right; }
+        .sig-line { display: inline-block; width: 150px; border-top: 2px solid #333; padding-top: 5px; font-weight: 700; font-size: 12px; }
 
-        .r-footer { margin-top: 40px; text-align: right; }
-        .sig-line { display: inline-block; width: 160px; border-top: 2px solid #333; padding-top: 5px; font-weight: 700; font-size: 12px; }
-        .note { font-size: 9px; font-style: italic; color: #777; margin-top: 10px; text-align: left; }
-
-        /* Print Settings for Android */
         @media print {
-            body { padding: 0; background: white; }
             .no-print { display: none !important; }
-            #receipt-modal { position: absolute; top: 0; left: 0; width: 100%; height: auto; padding: 0; }
-            .receipt-box { border: 2.5px solid var(--p) !important; box-shadow: none !important; margin-top: 20px; }
-            .fee-tag { background: var(--p) !important; -webkit-print-color-adjust: exact; }
-            .r-logo-circle { border: 2px solid var(--p) !important; -webkit-print-color-adjust: exact; }
+            #receipt-modal { position: absolute; top: 0; padding: 0; }
+            .receipt-box { border: 2.5px solid var(--p) !important; -webkit-print-color-adjust: exact; }
+            body { background: white; }
         }
     </style>
 </head>
@@ -74,50 +52,38 @@
 
 <div class="nav no-print">
     <button id="b1" class="active" onclick="tab('entry')">NEW ENTRY</button>
-    <button id="b2" onclick="tab('search')">SEARCH/PRINT</button>
-    <button onclick="window.location.href='report.html'">REPORTS</button>
+    <button id="b2" onclick="tab('search')">SEARCH</button>
 </div>
 
 <div id="entry-div" class="container no-print">
-    <div class="grid">
-        <div><label>Student ID</label><input type="text" id="StudentId"></div>
-        <div><label>Month</label><select id="Month">
+    <div style="margin-bottom:15px;">
+        <label>Select Month to Sync Columns</label>
+        <select id="Month" onchange="loadDynamicUI()">
             <option>January</option><option>February</option><option>March</option>
             <option>April</option><option>May</option><option>June</option>
             <option>July</option><option>August</option><option>September</option>
             <option>October</option><option>November</option><option>December</option>
-        </select></div>
-        <div style="grid-column: span 2;"><label>Student Name</label><input type="text" id="StudentName"></div>
-        <div style="grid-column: span 2;"><label>Father's Name</label><input type="text" id="FatherName"></div>
-        <div><label>Class</label><input type="text" id="Class"></div>
-        <div><label>Prev Dues</label><input type="number" id="PrevDues" value="0" oninput="doCalc()"></div>
-        <div><label>School Fee</label><input type="number" id="SchoolFee" value="0" oninput="doCalc()"></div>
-        <div><label>Academy Fee</label><input type="number" id="AcademyFee" value="0" oninput="doCalc()"></div>
-        <div><label>Misc Fee</label><input type="number" id="MiscellaneousFee" value="0" oninput="doCalc()"></div>
-        <div><label>Books Fee</label><input type="number" id="Books" value="0" oninput="doCalc()"></div>
-        <div class="calc-box">
-            <div><label>Total</label><input type="number" id="TotalDues" readonly></div>
-            <div><label>Paid</label><input type="number" id="TotalPaid" value="0" oninput="doCalc()"></div>
-            <div><label>Balance</label><input type="number" id="Remaining" readonly></div>
-        </div>
+        </select>
     </div>
-    <button class="btn-save" onclick="saveData()">SAVE & GENERATE RECEIPT 🖨️</button>
+    <div id="dynamic-fields" class="grid">
+        </div>
+    <button class="btn-save" onclick="saveData()">SAVE & PRINT RECEIPT 🖨️</button>
 </div>
 
 <div id="search-div" class="container no-print" style="display:none">
-    <div style="display:flex; gap:10px;">
-        <input type="text" id="q_id" placeholder="Enter ID...">
-        <button onclick="findData()" style="padding:0 20px; background:var(--p); color:white; border:none; border-radius:8px; cursor:pointer;">SEARCH</button>
-    </div>
+    <input type="text" id="q_id" placeholder="Enter Student ID...">
+    <button onclick="findData()" style="width:100%; margin-top:10px; padding:10px; background:var(--p); color:white; border:none; border-radius:8px;">SEARCH</button>
     <div id="res-list" style="margin-top:20px;"></div>
 </div>
 
 <div id="receipt-modal">
     <div class="receipt-box">
         <div class="r-header">
-            <div class="r-logo-circle">IPS</div>
+            <div class="r-logo" id="logo-container">
+                <span id="logo-text">IPS</span>
+            </div>
             <h2 class="school-name">IQRA PUBLIC SCHOOL</h2>
-            <p class="school-addr">Mathurapur, Barsoi, Katihar</p>
+            <p style="font-size:10px; margin:2px;">Mathurapur, Barsoi, Katihar</p>
             <div class="fee-tag">FEE RECEIPT</div>
         </div>
 
@@ -126,17 +92,14 @@
             <span>ID: <span id="r_id"></span></span>
         </div>
 
-        <div class="r-student-info">
+        <div style="font-size:13px; margin:10px 0; line-height:1.6;">
             <b>Name:</b> <span id="r_name"></span> | <b>Class:</b> <span id="r_class"></span><br>
             <b>Father:</b> <span id="r_father"></span> | <b>Month:</b> <span id="r_mon"></span>
         </div>
 
         <table class="r-table">
-            <thead>
-                <tr><th>Description</th><th style="text-align:right">Amount</th></tr>
-            </thead>
-            <tbody id="r_items">
-                </tbody>
+            <thead><tr><th>Description</th><th style="text-align:right">Amount</th></tr></thead>
+            <tbody id="r_items"></tbody>
             <tfoot>
                 <tr class="r-total-row"><td>TOTAL PAID</td><td align="right" id="r_paid"></td></tr>
                 <tr class="r-bal-row"><td>Balance</td><td align="right" id="r_rem"></td></tr>
@@ -145,19 +108,26 @@
 
         <div class="r-footer">
             <div class="sig-line">Principal Signature</div>
-            <div class="note">Note: This is an electronically generated receipt.</div>
         </div>
 
         <div class="no-print" style="margin-top:30px; display:flex; gap:10px; justify-content:center;">
-            <button onclick="window.print()" style="padding:12px 25px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">SAVE PDF / PRINT</button>
-            <button onclick="closeR()" style="padding:12px 25px; background:var(--s); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">BACK</button>
+            <button onclick="window.print()" style="padding:10px 20px; background:var(--p); color:white; border:none; border-radius:5px; cursor:pointer;">PRINT PDF</button>
+            <button onclick="closeR()" style="padding:10px 20px; cursor:pointer;">BACK</button>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. APNA URL YAHAN DALEIN
-    const URL = "https://script.google.com/macros/s/AKfycbyY6vSVjhOCH47m2vGpF-rdvFGzrGvrULhHGuDCNsq0ZdMeqbkC8kY9Gi8XeDjU2aJe/exec";
+    // --- SETTINGS ---
+    const URL = "https://script.google.com/macros/s/AKfycbwt8zV_5jonexD9WT7Fd1v8XF_90xq7AClOOFycJCO353sppYvTp0O9lv1Pw5Ymxcee/exec";
+    const LOGO_URL = ""; // Yahan apna logo image URL dalein (e.g. "https://site.com/logo.png")
+
+    let currentHeaders = [];
+
+    window.onload = () => {
+        loadDynamicUI();
+        if(LOGO_URL) document.getElementById('logo-container').innerHTML = `<img src="${LOGO_URL}">`;
+    };
 
     function tab(t) {
         document.getElementById('entry-div').style.display = t==='entry'?'block':'none';
@@ -166,73 +136,97 @@
         document.getElementById('b2').className = t==='search'?'active':'';
     }
 
+    async function loadDynamicUI() {
+        let m = document.getElementById('Month').value;
+        let res = await fetch(URL + "?action=getHeaders&month=" + m);
+        currentHeaders = await res.json();
+        
+        let container = document.getElementById('dynamic-fields');
+        container.innerHTML = "";
+        let skip = ["PaidDate", "TotalDues", "TotalPaid", "Remaining", "Month"];
+
+        currentHeaders.forEach(h => {
+            if(!skip.includes(h.trim())) {
+                let div = document.createElement('div');
+                if(["StudentName", "FatherName"].includes(h.trim())) div.style.gridColumn = "span 2";
+                div.innerHTML = `<label>${h}</label><input type="text" id="${h}" oninput="doCalc()">`;
+                container.appendChild(div);
+            }
+        });
+        
+        container.innerHTML += `
+            <div class="calc-box">
+                <div><label>Total</label><input type="number" id="TotalDues" readonly></div>
+                <div><label>Paid</label><input type="number" id="TotalPaid" oninput="doCalc()"></div>
+                <div><label>Balance</label><input type="number" id="Remaining" readonly></div>
+            </div>`;
+    }
+
     function doCalc() {
-        let fields = ['PrevDues','SchoolFee','AcademyFee','MiscellaneousFee','Books'];
-        let total = fields.reduce((sum, id) => sum + (parseFloat(document.getElementById(id).value) || 0), 0);
-        let paid = parseFloat(document.getElementById('TotalPaid').value) || 0;
+        let total = 0;
+        let nonFee = ["StudentId", "StudentName", "FatherName", "Class"];
+        currentHeaders.forEach(h => {
+            let el = document.getElementById(h);
+            if(el && !nonFee.includes(h) && !["PaidDate","TotalDues","TotalPaid","Remaining","Month"].includes(h)) {
+                total += parseFloat(el.value) || 0;
+            }
+        });
         document.getElementById('TotalDues').value = total;
+        let paid = parseFloat(document.getElementById('TotalPaid').value) || 0;
         document.getElementById('Remaining').value = total - paid;
     }
 
     async function saveData() {
-        let inputs = document.querySelectorAll('#entry-div input, #entry-div select');
-        let data = {};
-        inputs.forEach(i => data[i.id] = i.value);
-        if(!data.StudentId) return Swal.fire('Error', 'Student ID is required!', 'error');
+        let data = { Month: document.getElementById('Month').value };
+        document.querySelectorAll('#entry-div input').forEach(i => data[i.id] = i.value);
+        
+        if(!data.StudentId) return Swal.fire('Error', 'Student ID bhariye', 'error');
 
         Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
         fetch(URL, { method: "POST", body: JSON.stringify(data) })
-        .then(() => {
-            Swal.fire('Saved!', 'Fees record updated successfully.', 'success');
-            showR(data);
-        }).catch(err => Swal.fire('Error', err.toString(), 'error'));
-    }
-
-    function findData() {
-        let id = document.getElementById('q_id').value;
-        if(!id) return Swal.fire('Wait', 'Enter Student ID first', 'info');
-        
-        fetch(URL + "?action=searchData&id=" + id)
-        .then(res => res.json()).then(res => {
-            let html = "";
-            res.forEach(r => {
-                html += `<div style="padding:12px; border:1px solid #ddd; margin-bottom:8px; border-radius:10px; display:flex; justify-content:space-between; background:white; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                    <span><b>${r.Month}</b> - ${r.StudentName}</span>
-                    <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:600;">View</button>
-                </div>`;
-            });
-            document.getElementById('res-list').innerHTML = html || "<p style='text-align:center'>No records found.</p>";
+        .then(res => res.text()).then(res => {
+            if(res.includes("Success")) {
+                Swal.fire('Saved!', 'Record updated.', 'success');
+                showR(data);
+            } else { Swal.fire('Error', res, 'error'); }
         });
     }
 
     function showR(r) {
-        document.getElementById('r_id').innerText = r.StudentId || r.id;
-        document.getElementById('r_name').innerText = r.StudentName || r.name;
-        document.getElementById('r_father').innerText = r.FatherName || r.father;
-        document.getElementById('r_class').innerText = r.Class || r.className;
-        document.getElementById('r_mon').innerText = r.Month || r.mon;
+        document.getElementById('r_id').innerText = r.StudentId || "N/A";
+        document.getElementById('r_name').innerText = r.StudentName || "N/A";
+        document.getElementById('r_father').innerText = r.FatherName || "N/A";
+        document.getElementById('r_class').innerText = r.Class || "N/A";
+        document.getElementById('r_mon').innerText = r.Month || "N/A";
         document.getElementById('r_date').innerText = r.PaidDate || new Date().toLocaleDateString('en-GB');
-        
-        // Itemized List for Receipt
-        let rows = [
-            {l: "Previous Dues", v: r.PrevDues},
-            {l: "School Fee", v: r.SchoolFee},
-            {l: "Academy Fee", v: r.AcademyFee},
-            {l: "Miscellaneous Fee", v: r.MiscellaneousFee},
-            {l: "Books Fee", v: r.Books}
-        ];
-        
-        document.getElementById('r_items').innerHTML = rows.map(row => 
-            `<tr><td>${row.l}</td><td align="right">₹${parseFloat(row.v || 0)}</td></tr>`
-        ).join('');
 
+        let html = "";
+        let skip = ["StudentId", "StudentName", "FatherName", "Class", "Month", "PaidDate", "TotalDues", "TotalPaid", "Remaining"];
+        Object.keys(r).forEach(key => {
+            if(!skip.includes(key) && r[key] != "") {
+                html += `<tr><td>${key}</td><td align="right">₹${r[key]}</td></tr>`;
+            }
+        });
+        document.getElementById('r_items').innerHTML = html;
         document.getElementById('r_paid').innerText = "₹" + (r.TotalPaid || 0);
         document.getElementById('r_rem').innerText = "₹" + (r.Remaining || 0);
-        
         document.getElementById('receipt-modal').style.display = 'block';
     }
 
+    function findData() {
+        let id = document.getElementById('q_id').value;
+        fetch(URL + "?action=searchData&id=" + id).then(res => res.json()).then(res => {
+            let h = "";
+            res.forEach(r => {
+                h += `<div style="padding:10px; border:1px solid #ddd; margin-bottom:5px; border-radius:8px; display:flex; justify-content:space-between; background:white;">
+                    <span><b>${r.Month}</b> - ${r.StudentName}</span>
+                    <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:5px 10px; border-radius:4px;">View</button>
+                </div>`;
+            });
+            document.getElementById('res-list').innerHTML = h || "No records.";
+        });
+    }
     function closeR() { document.getElementById('receipt-modal').style.display = 'none'; }
 </script>
 </body>
