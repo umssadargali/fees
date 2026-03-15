@@ -9,55 +9,53 @@
         body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding-top: 70px; }
         
         /* Navbar */
-        .nav { background: var(--p); display: flex; justify-content: center; padding: 12px; gap: 15px; position: fixed; top: 0; width: 100%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; transition: 0.3s; }
-        .nav button.active { background: #ff9800; color: #000; }
+        .nav { background: var(--p); display: flex; justify-content: center; padding: 12px; gap: 15px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .nav button { padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #3949ab; color: white; }
+        .nav button.active { background: #ff9800 !important; color: #000 !important; }
 
+        /* Container & Grid */
         .container { max-width: 550px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); border-top: 8px solid var(--p); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { font-size: 11px; font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
         
         .calc-box { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px dashed var(--p); margin-top: 10px; }
         .btn-save { width: 100%; padding: 16px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
 
-        /* --- UPDATED RECEIPT DESIGN (Matching your 2nd Screenshot) --- */
-        #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 15px; }
+        /* --- UPDATED RECEIPT DESIGN (Matching Screenshot) --- */
+        #receipt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
         .receipt-box { 
             max-width: 420px; 
             margin: auto; 
             border: 3px solid var(--p); 
             border-radius: 25px; 
-            padding: 25px; 
+            padding: 20px; 
             position: relative; 
             background: #fff;
             box-sizing: border-box;
         }
-        .r-header { text-align: center; margin-bottom: 20px; }
-        .r-logo { width: 75px; height: 75px; border: 2.5px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--p); font-weight: 800; font-size: 24px; }
+        .r-header { text-align: center; margin-bottom: 15px; }
+        .r-logo { width: 75px; height: 75px; border: 2.5px solid var(--p); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--p); font-weight: bold; font-size: 20px; }
         .r-logo img { width: 100%; height: 100%; object-fit: cover; }
-        .school-name { margin: 0; color: var(--p); font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        .fee-tag { background: var(--p); color: white; padding: 5px 25px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 8px; }
+        .school-name { margin: 0; color: var(--p); font-size: 22px; font-weight: 800; text-transform: uppercase; }
+        .fee-tag { background: var(--p); color: white; padding: 5px 25px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 5px; }
         
-        .r-meta { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; border-top: 2px solid #333; padding-top: 10px; margin-top: 15px; color: #000; }
-        .r-student-info { font-size: 14px; margin: 15px 0; line-height: 1.8; color: #000; }
+        .r-meta { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; border-top: 2px solid #444; padding-top: 8px; margin-top: 15px; color: #000; }
+        .r-info { font-size: 14px; margin: 15px 0; line-height: 1.8; color: #000; }
         
         .r-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .r-table th { border-top: 2px solid #333; border-bottom: 2px solid #333; padding: 10px 0; text-align: left; font-size: 14px; font-weight: 700; }
-        .r-table td { padding: 10px 0; font-size: 14px; border-bottom: 1px solid #eee; color: #333; }
+        .r-table th { border-top: 2px solid #444; border-bottom: 2px solid #444; padding: 8px 0; text-align: left; font-size: 14px; }
+        .r-table td { padding: 8px 0; font-size: 14px; border-bottom: 1px solid #eee; color: #333; }
         
-        .r-total-row { font-weight: 800; color: var(--p); font-size: 16px; }
-        .r-bal-row { color: var(--s); font-weight: 800; font-size: 16px; }
-        
-        .r-footer { margin-top: 100px; text-align: right; }
-        .sig-line { display: inline-block; width: 160px; border-top: 2px solid #333; padding-top: 5px; font-weight: 700; font-size: 13px; color: #000; }
-        .note { font-size: 10px; font-style: italic; color: #666; position: absolute; bottom: 25px; left: 25px; }
+        .r-total-row { font-weight: 800; color: var(--p); font-size: 15px; }
+        .r-bal-row { color: var(--s); font-weight: 800; font-size: 15px; }
+        .r-footer { margin-top: 80px; text-align: right; }
+        .sig-line { display: inline-block; width: 160px; border-top: 2px solid #333; padding-top: 5px; font-weight: 700; font-size: 13px; }
 
         @media print {
             .no-print { display: none !important; }
-            #receipt-modal { position: absolute; top: 0; left: 0; padding: 0; width: 100%; }
-            .receipt-box { border: 3px solid var(--p) !important; box-shadow: none !important; margin: 10px auto; -webkit-print-color-adjust: exact; }
-            .fee-tag { background: var(--p) !important; color: white !important; -webkit-print-color-adjust: exact; }
+            #receipt-modal { position: absolute; top: 0; padding: 0; width: 100%; }
+            .receipt-box { border: 3px solid var(--p) !important; -webkit-print-color-adjust: exact; }
             body { background: white; }
         }
     </style>
@@ -97,7 +95,7 @@
                 <span id="logo-text">IPS</span>
             </div>
             <h2 class="school-name">IQRA PUBLIC SCHOOL</h2>
-            <p style="font-size:11px; margin:4px; color: #444;">Mathurapur, Barsoi, Katihar</p>
+            <p style="font-size:11px; margin:4px; color:#444;">Mathurapur, Barsoi, Katihar</p>
             <div class="fee-tag">FEE RECEIPT</div>
         </div>
 
@@ -106,7 +104,7 @@
             <span>ID: <span id="r_id"></span></span>
         </div>
 
-        <div class="r-student-info">
+        <div class="r-info">
             <b>Name:</b> <span id="r_name"></span> | <b>Class:</b> <span id="r_class"></span><br>
             <b>Father:</b> <span id="r_father"></span> | <b>Month:</b> <span id="r_mon"></span>
         </div>
@@ -115,7 +113,7 @@
             <thead><tr><th>Description</th><th style="text-align:right">Amount</th></tr></thead>
             <tbody id="r_items"></tbody>
             <tfoot>
-                <tr class="r-total-row"><td style="padding-top:15px;">TOTAL PAID</td><td align="right" id="r_paid" style="padding-top:15px;"></td></tr>
+                <tr class="r-total-row"><td style="padding-top:10px;">TOTAL PAID</td><td align="right" id="r_paid" style="padding-top:10px;"></td></tr>
                 <tr class="r-bal-row"><td>Balance</td><td align="right" id="r_rem"></td></tr>
             </tfoot>
         </table>
@@ -123,8 +121,6 @@
         <div class="r-footer">
             <div class="sig-line">Principal Signature</div>
         </div>
-        
-        <div class="note">Note: This is an electronically generated receipt.</div>
 
         <div class="no-print" style="margin-top:40px; display:flex; gap:15px; justify-content:center;">
             <button onclick="window.print()" style="padding:12px 25px; background:var(--p); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">SAVE PDF / PRINT</button>
@@ -153,7 +149,6 @@
 
     async function loadDynamicUI() {
         let m = document.getElementById('Month').value;
-        // Interface saaf karne ke liye:
         let container = document.getElementById('dynamic-fields');
         container.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading fields...</p>";
 
@@ -161,18 +156,22 @@
             let res = await fetch(URL + "?action=getHeaders&month=" + m);
             currentHeaders = await res.json();
             
-            container.innerHTML = ""; // Purana data clear kiya
+            // CRITICAL: Pehle purana saaf karna hai (No more repeating fields)
+            container.innerHTML = ""; 
+            
             let skip = ["PaidDate", "TotalDues", "TotalPaid", "Remaining", "Month"];
 
             currentHeaders.forEach(h => {
                 if(!skip.includes(h.trim())) {
                     let div = document.createElement('div');
+                    // ID aur Name ko full width dena hai
                     if(["StudentName", "FatherName", "StudentId"].includes(h.trim())) div.style.gridColumn = "span 2";
                     div.innerHTML = `<label>${h}</label><input type="text" id="${h}" oninput="doCalc()">`;
                     container.appendChild(div);
                 }
             });
             
+            // Calculation boxes ko niche fix kar dena hai
             container.innerHTML += `
                 <div class="calc-box">
                     <div><label>Total</label><input type="number" id="TotalDues" readonly></div>
@@ -180,7 +179,7 @@
                     <div><label>Balance</label><input type="number" id="Remaining" readonly></div>
                 </div>`;
         } catch (e) {
-            container.innerHTML = "<p style='color:red; grid-column:span 2;'>Error loading fields. Check Internet.</p>";
+            container.innerHTML = "<p style='color:red;'>Failed to load. Check Internet.</p>";
         }
     }
 
@@ -200,20 +199,19 @@
 
     async function saveData() {
         let data = { Month: document.getElementById('Month').value };
-        let allInputs = document.querySelectorAll('#entry-div input');
-        allInputs.forEach(i => data[i.id] = i.value);
+        document.querySelectorAll('#entry-div input').forEach(i => data[i.id] = i.value);
         
         if(!data.StudentId) return Swal.fire('Error', 'Student ID bhariye', 'error');
 
-        Swal.fire({ title: 'Saving Data...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
         fetch(URL, { method: "POST", body: JSON.stringify(data) })
         .then(res => res.text()).then(res => {
             if(res.includes("Success")) {
-                Swal.fire('Saved!', 'Fees record updated successfully.', 'success');
+                Swal.fire('Saved!', 'Fees record updated.', 'success');
                 showR(data);
             } else { Swal.fire('Error', res, 'error'); }
-        }).catch(err => Swal.fire('Error', 'Server issue', 'error'));
+        });
     }
 
     function showR(r) {
@@ -227,7 +225,7 @@
         let html = "";
         let skip = ["StudentId", "StudentName", "FatherName", "Class", "Month", "PaidDate", "TotalDues", "TotalPaid", "Remaining"];
         
-        // Receipt rows generation
+        // Headers ke order mein receipt rows generate karna
         currentHeaders.forEach(h => {
             if(!skip.includes(h) && r[h] && r[h] != 0) {
                 html += `<tr><td>${h}</td><td align="right">₹${r[h]}</td></tr>`;
@@ -242,17 +240,15 @@
 
     function findData() {
         let id = document.getElementById('q_id').value;
-        if(!id) return Swal.fire('Info', 'ID enter karein', 'info');
-        
         fetch(URL + "?action=searchData&id=" + id).then(res => res.json()).then(res => {
             let h = "";
             res.forEach(r => {
-                h += `<div style="padding:15px; border:1px solid #ddd; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; background:white; align-items:center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                h += `<div style="padding:15px; border:1px solid #ddd; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; background:white; align-items:center;">
                     <span><b>${r.Month}</b> - ${r.StudentName}</span>
                     <button onclick='showR(${JSON.stringify(r)})' style="background:var(--p); color:white; border:none; padding:8px 15px; border-radius:6px; font-weight:bold; cursor:pointer;">View</button>
                 </div>`;
             });
-            document.getElementById('res-list').innerHTML = h || "<p style='text-align:center;'>No records found.</p>";
+            document.getElementById('res-list').innerHTML = h || "No records.";
         });
     }
     function closeR() { document.getElementById('receipt-modal').style.display = 'none'; }
