@@ -106,7 +106,7 @@
         </table>
         <div style="margin-top:20px; text-align:right;"><small style="border-top:1px solid #333; padding-top:3px;">Principal Signature</small></div>
         <div class="no-print" style="margin-top:20px; display:flex; gap:10px;">
-            <button onclick="window.print()" style="flex:1; padding:10px; background:var(--p); color:white; border-radius:5px;">PRINT</button>
+            <button onclick="if(window.AndroidPrint){ AndroidPrint.triggerPrint(); } else { window.print(); }" style="padding:12px 30px; background:var(--green); color:white; border:none; cursor:pointer; font-weight:bold; border-radius:5px;">PRINT / SAVE PDF</button>
             <button onclick="closeR()" style="flex:1; padding:10px; background:#666; color:white; border-radius:5px;">BACK</button>
         </div>
     </div>
