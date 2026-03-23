@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root { --p: #1a237e; --s: #ff5252; --bg: #f4f7f6; --green: #25D366; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); padding: 15px; margin: 0; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header-box { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        select { flex: 2; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: bold; }
+        .btn-fetch { flex: 1; padding: 12px; background: var(--p); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-all { width: 100%; padding: 15px; background: var(--green); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 15px; display: none; font-size: 16px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; color: #555; text-transform: uppercase; font-size: 11px; }
+        
+        .badge-red { background: #ffebee; color: #c62828; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
+        .status-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #eee; }
+        
+        @media (max-width: 500px) {
+            .controls { flex-direction: column; }
+            .btn-fetch { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-box">
+        <h2 style="margin:0; color:var(--p);">IQRA PUBLIC SCHOOL</h2>
+        <small>Fees Management - Dues Reminder</small>
+    </div>
+    
+    <div class="controls">
+        <select id="due_month">
+            <option value="">-- Select Month --</option>
+            <option>January</option><option>February</option><option>March</option><option>April</option>
+            <option>May</option><option>June</option><option>July</option><option>August</option>
+            <option>September</option><option>October</option><option>November</option><option>December</option>
+        </select>
+        <button class="btn-fetch" onclick="loadDues()">🔍 LOAD DUES</button>
+    </div>
+
+    <button id="send-all-btn" class="btn-all" onclick="sendToAll()">📤 SEND REMINDER TO ALL PENDING</button>
+
+    <div id="due-list-container">
+        <p style="text-align: center; color: #999; margin-top: 40px;">Select a month and click "Load Dues" to see students with pending balances.</p>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbw3ttuzHI6Z5lGBkEoF-XwCTIapJV8s3Qxzl55aGtg7-ddUWB5GpC-BSbGeV1OCU_-7/exec";
+    let pendingList = []; // Global list for "Send All"
+
+    async function loadDues() {
+        let month = document.getElementById('due_month').value;
+        if(!month) return Swal.fire('Month?', 'Pehle mahina select karein', 'info');
+        
+        let container = document.getElementById('due-list-container');
+        let btnAll = document.getElementById('send-all-btn');
+        
+        container.innerHTML = "<div style='text-align:center; padding:40px;'><div class='spinner'></div><br>Searching pending records...</div>";
+        btnAll.style.display = "none";
+        pendingList = [];
+
+        try {
+            let res = await fetch(API_URL + "?action=getReportData&month=" + month);
+            let result = await res.json();
+            
+            if(result.rows.length === 0) {
+                container.innerHTML = "<p style='color:red; text-align:center; margin-top:40px;'>No records found for " + month + ".</p>";
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>Student Details</th>
+                        <th>Balance</th>
+                        <th style="text-align:right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            result.rows.forEach(r => {
+                if(r.bal > 0) {
+                    pendingList.push(r); // Add to bulk list
+                    html += `<tr>
+                        <td><b>${r.name}</b><br><span class="status-tag">Class: ${r.class}</span></td>
+                        <td><span class="badge-red">₹${r.bal}</span></td>
+                        <td align="right">
+                            <button onclick="sendWA('${r.name}', '${r.bal}')" style="background:var(--green); border:none; color:white; padding:8px; border-radius:5px; cursor:pointer;">
+                                <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="15">
+                            </button>
+                        </td>
+                    </tr>`;
+                }
+            });
+
+            if(pendingList.length === 0) {
+                container.innerHTML = "<div style='text-align:center; color:green; padding:40px;'>✅ Sabka fees jama hai is mahine ka!</div>";
+            } else {
+                container.innerHTML = html + "</tbody></table>";
+                btnAll.innerText = `📤 SEND REMINDER TO ALL (${pendingList.length})`;
+                btnAll.style.display = "block";
+            }
+
+        } catch (e) {
+            container.innerHTML = "<p style='color:red; text-align:center;'>Network error. Check internet connection.</p>";
+        }
+    }
+
+    // Function for Individual WhatsApp
+    function sendWA(name, amount) {
+        let month = document.getElementById('due_month').value;
+        let msg = `*IQRA PUBLIC SCHOOL - FEE REMINDER*\n\nDear Parent, student *${name}* ka *${month}* month ka balance *₹${amount}* baki hai. Kripya ise jald jama karein.\n\nThank you.`;
+        let url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    }
+
+    // Function for "Send To All" (Queue based)
+    async function sendToAll() {
+        const { value: proceed } = await Swal.fire({
+            title: 'Bulk Messaging',
+            text: `${pendingList.length} students ko messages bheje jayenge. Ek-ek karke WhatsApp tabs khulenge. Continue?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#25D366'
+        });
+
+        if (proceed) {
+            let month = document.getElementById('due_month').value;
+            for (let i = 0; i < pendingList.length; i++) {
+                let r = pendingList[i];
+                let msg = `*IQRA PUBLIC SCHOOL - FEE REMINDER*\n\nDear Parent, student *${r.name}* ka *${month}* month ka balance *₹${r.bal}* baki hai. Kripya ise jald jama karein.\n\nThank you.`;
+                let url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+                
+                // Hum delay dete hain taaki browser crash na ho
+                window.open(url, '_blank');
+                
+                // Har message ke baad thoda wait karein (sirf confirmation ke liye)
+                if(i < pendingList.length - 1) {
+                    await Swal.fire({
+                        title: `Sent ${i+1}/${pendingList.length}`,
+                        text: `Next message: ${pendingList[i+1].name}`,
+                        timer: 1500,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }
+            }
+            Swal.fire('Done!', 'Sare messages process ho gaye.', 'success');
+        }
+    }
+</script>
+
+</body>
+</html>
